@@ -77,18 +77,19 @@ class user {
         $sql = "SELECT * FROM `user` WHERE `username`= '$this->username' and `password` =  '$this->password' and isdeleted=0";
         $result = mysqli_query($conn,$sql);
         $row = $result->fetch_assoc();
-        
+      if($row!="")
+      {
         $this->id = $row['id'];
         $this->username = $row['username'];
         $this->personId = $row['person_id'];
-        
         return $this;
-        // $personId=$row["person_id"]; 
-        
-        // $sql="SELECT role_id from person WHERE id = ".$personId;
-        // $result1 = mysqli_query($conn, $sql);
-        // $rowPerson = $result1->fetch_assoc();
-        // $roleId=$rowPerson["role_id"];
+       
+       }
+       else
+       {
+         
+           return false;
+       } 
         
         
     }

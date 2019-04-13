@@ -31,8 +31,11 @@ class person {
         $conn = db::create_connection();
         $sql = "SELECT * FROM " .$this->TableName. " WHERE " .$this->TableId. " = ".$id;
         $result = mysqli_query($conn, $sql);
-        $result = $result->fetch_assoc();
-        $conn->close();
+       if($result)
+       { 
+           $result = $result->fetch_assoc();
+       
+       
 
         $this->id = $result['id'];
         $this->name = $result['name'];
@@ -42,6 +45,11 @@ class person {
         $this->roleId = $result['role_id'];
 
         return $this;
+       }
+       else
+       {
+           return false;
+       }
     }
 
     function GetByRoleId($id)

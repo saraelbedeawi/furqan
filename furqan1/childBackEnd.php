@@ -1,38 +1,44 @@
 <?php
-
-
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname= "dar_elfourkan";
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
 include_once "./models/person.php";
 include_once "./models/child.php";
 include_once "./models/document.php";
+include_once "./helpers/ViewHelper.php";
 if(isset($_POST['method']) && $_POST['method']=="addChild")
 {
-    addChild($conn);
+    addChild();
 }
-if(isset($_GET['method']) && $_GET['method']=="showUpdate")
+else if(isset($_GET['method']) && $_GET['method']=="showUpdate")
 {
     viewUpdate();
 }
-if(isset($_POST['method']) && $_POST['method']=="deleteChild")
+else if(isset($_POST['method']) && $_POST['method']=="deleteChild")
 {
-    deleteChild($conn);
+    deleteChild();
 }
-if(isset($_POST['method']) && $_POST['method']=="editChild")
+else if(isset($_POST['method']) && $_POST['method']=="editChild")
 {
-    updateChild($conn);
+    updateChild();
 }
-function addChild($conn)
+else if(isset($_GET['method']) && $_GET['method']=="getChilderen")
+{
+    
+    Getchilderen();
+}
+
+else if(isset($_GET['method']) && $_GET['method']=="vievAddChild")
+{
+    View('addChild.html');
+}
+else
+{
+    View('editChild.html');
+}
+
+function addChild()
  {
     
 
-    mysqli_query($conn,"SET NAMES 'utf8'"); 
-    mysqli_query($conn,'SET CHARACTER SET utf8');
+   
     $person = new person();
     $person->name=$_POST['name'];
     $person->birthDate=$_POST['DOB'];
@@ -56,11 +62,12 @@ function addChild($conn)
     $document->decisionNumber= $_POST['decisionNum'];
     $document->decisionDate= $_POST['decisionDate'];
     $document_id = $document->Insert();
-    $sql="insert into case_details(case_id,document_id) values ($caseId, $document_id)";
-    $result = mysqli_query($conn,$sql);
+    $document->InsertCaseDetails($caseId, $document_id);
+ 
 
  }
-function viewUpdate()
+
+ function viewUpdate()
 {
     $id=$_GET['id'];
     $childDetails=new person();
@@ -93,7 +100,7 @@ function viewUpdate()
         'decision_date'=>$decision_date,);
         echo json_encode($replacement_array);
 }
-function updateChild($conn)
+function updateChild()
 {   
     $person = new person();
     $person->name=$_POST['name'];
@@ -101,8 +108,7 @@ function updateChild($conn)
     $person->nationalId=$_POST['SSN'];
     $person->gender=$_POST['gender'];
     $person->id=$_POST['id'];
-    mysqli_query($conn,"SET NAMES 'utf8'"); 
-    mysqli_query($conn,'SET CHARACTER SET utf8');
+
     $document = new document();
     $document->relative= $_POST['nasab'];
     $document->state= $_POST['state'];
@@ -114,24 +120,52 @@ function updateChild($conn)
     $document->decisionDate= $_POST['decisionDate'];
     $person->updateChild($document);
 }
- function deleteChild($conn)
+ function deleteChild()
  {
     $person = new person();
     $person->id=$_POST['id'];
     $person->Delete();
-//     $sql= "SELECT  case_details.document_id from `case` INNER JOIN case_details on `case`.id=
-//      case_details.case_id where `case`.child_id = $id";
-//     $result = mysqli_query($conn,$sql);
-//     $row=mysqli_fetch_row($result);
-//     $document_id=$row['document_id'];
+    //     $sql= "SELECT  case_details.document_id from `case` INNER JOIN case_details on `case`.id=
+    //      case_details.case_id where `case`.child_id = $id";
+    //     $result = mysqli_query($conn,$sql);
+    //     $row=mysqli_fetch_row($result);
+    //     $document_id=$row['document_id'];
 
-//    $sql= "DELETE from document where id = $document_id";
-//    echo $sql;
-//     $result = mysqli_query($conn,$sql);
+    //    $sql= "DELETE from document where id = $document_id";
+    //    echo $sql;
+    //     $result = mysqli_query($conn,$sql);
 
-    // $sql= "DELETE from person where id = $id";
-    // $result = mysqli_query($conn,$sql);
+        // $sql= "DELETE from person where id = $id";
+        // $result = mysqli_query($conn,$sql);
 
     
  }
+ function Getchilderen()
+ {
+
+     $person=new person();
+     $arr=array();
+     $rows=$person->GetByRoleId(6);
+     foreach ( $rows as $row )  
+     { 
+        $person=new person();
+        $person->id = $row['id'];
+        $person->name = $row['name'];
+        $person->birthDate = $row['birth_date'];
+        $person->nationalId = $row['national_id'];
+        $person->gender = $row['gender'];
+        $person->roleId = $row['role_id'];
+         array_push( $arr, $person );  
+     } 
+     
+    echo json_encode($arr);
+
+ }
+ function View($file)
+ {
+    ViewHelper::parser('header.html');
+    ViewHelper::parser($file);
+ }
+ 
+
 ?>

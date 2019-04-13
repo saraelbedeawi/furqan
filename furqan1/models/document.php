@@ -54,10 +54,14 @@ class document {
         {
             return false;
         }
-        
         $conn->close();
     }
-
+function InsertCaseDetails($caseId,$document_id)
+{
+    $conn = db::create_connection();
+    $sql="insert into case_details(case_id,document_id) values ($caseId, $document_id)";
+    $result = mysqli_query($conn,$sql);
+}
     function Update(document $document) 
     {
         $conn = db::create_connection();

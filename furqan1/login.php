@@ -23,7 +23,13 @@
 				{
 					data = JSON.parse(data);
 					if(data.status=="success")
+					{
 						window.location.replace(data.url);
+					}
+					else if( data.status=="failed")
+					{
+					 alert("wrong username or password");
+					}
 				},
 				error: function(jqXHR, textStatus, errorThrown)
 				{
@@ -55,7 +61,7 @@
 <div class="container">
   <div class="top">
     <img class="logo" src="images/logo.jpg"/>
-    <form class="col-md-6 offset-md-3" id="add_user_form">
+    <div class="col-md-6 offset-md-3" id="add_user_form">
 		<label for="mail">
       الاسم
       <input id="name" type="text" placeholder=""/>
@@ -70,32 +76,7 @@
 						<button onclick="login()"style="margin-top:20px;color: orange;
 						"class="btn btn-light"> دخول</button>
   </div>
-  </form>
+  </div>
 </div>
-
-
-	<!-- Big Form-->
-	<!-- <div class="restOfForm container-fluid">
-		<div class="row">
-			
-				<div class="row">
-					<div class="col-md-6">
-						<label for="nameInput">الاسم</label>
-						<input type="text" id="name" class="form-control" placeholder="الاسم"><br>
-					</div>
-					<div class="col-md-6">
-						<label for="nameInput"> كلمة السر</label>
-						<input type="password" id="pass" class="form-control"placeholder="كلمة السر"><br>
-					</div>
-				</div>
-				
-					<div class="col-md-4 offset-md-2">
-						<button style="margin-top:20px;color: orange;
-						"class="btn btn-light"> دخول</button>
-					</div>		
-				</div>				
-			</form>
-		</div>
-	</div> -->
 </body>
 </html>

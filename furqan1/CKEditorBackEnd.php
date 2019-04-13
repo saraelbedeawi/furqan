@@ -13,14 +13,14 @@
         } 
 
 
-				 if(isset($_GET['method']) && $_GET['method']=="save")
+				 if(isset($_POST['method']) && $_POST['method']=="save")
 				{
 				    save($conn);
 				}
 
 				function save($conn)
 				{
-		        	$text =  $_GET['data'];
+		        	$text =  $_POST['data'];
 		     	 	$query=" UPDATE `ckeditor` SET `value`='$text' WHERE elementId LIKE 'label'";
 		     	 	echo $sql;
 		       		$result = mysqli_query($conn,$query);

@@ -1,5 +1,7 @@
 
-   <?php
+ 
+ <link rel="stylesheet" href="newstyle.css">
+ <?php
          require('header.html');
 
         $servername = "localhost";
@@ -17,9 +19,10 @@
         $result = mysqli_query($conn,$query);
 
                  while ($row = $result->fetch_assoc()) {
+                     
                 echo "<div class='ContText'> ".$row['value']  ." 
                 
-                <div class='links'>
+                <div class='links' >
                  <a href='CKEditor.php'> Edit </a>
             
                 </div>
@@ -27,6 +30,7 @@
                 </div><br>";    
                 
             }
+     
         ?>
 
     <script type="text/javascript">

@@ -38,11 +38,8 @@ function getOptions()
     $options = new options();
     $dontation_type_option=new donationsTypes();
     $option = $options->GetAll();
-    // print_r($options->id);
-    // print_r($option);
     if($id != 0) {
         $selectedOptions = $dontation_type_option->getDonationOptionDetails($id);
-        // print_r($selectedOptions);
         for($i = 0; $i < sizeof($option); $i++) {
             $option[$i]["selected"] = false;
             $option[$i]['donationName']=false;

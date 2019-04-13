@@ -1,13 +1,6 @@
 
-<script type="text/javascript">
-
-
-</script>
-
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <html>
-
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <?php
         // require('html/header.html');
 
@@ -70,32 +63,30 @@
 
                 
                         // var desc = CKEDITOR.instances['Edit'].getData();
-                        function Save() 
-                          {
-                                var data = CKEDITOR.instances['Edit'].getData();
-                               // var data= strip(html);
-                                //data.text();
+                        function Save() {
+                            var data = CKEDITOR.instances['Edit'].getData();
+                            // var data= strip(html);
+                            //data.text();
 
-                                // alert(data);
-                                if(data!="")
-                                {
-                                
-                                jQuery.ajax(
-                                 {
-                                        url: "CKEditorBackEnd.php",
-                                        data:'method=save&data='+data,
-                                        type: "GET",
-                                        success:function(data2)
-                                        {
-                                                alert("Changed!");
+                            // alert(data);
+                            if(data!="")
+                            {
+                            
+                                jQuery.ajax({
+                                    url: "CKEditorBackEnd.php",
+                                    data:'method=save&data='+data,
+                                    type: "POST",
+                                    success:function(data2)
+                                    {
+                                            alert("Changed!");
 
-                                                $("#result").html(data2);
-                                                top.location.href="contact.php";
-                                        }
+                                            $("#result").html(data2);
+                                            top.location.href="contact.php";
+                                    }
                                                 
                                 });
+                            }
                         }
-                         }
 
                 </script>
 

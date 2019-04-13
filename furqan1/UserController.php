@@ -62,8 +62,15 @@ function login()
    $user->password=$enc;
    $user->login();
 
+   if($user->login()===false)
+   {
+    $redirect = array();
+    $redirect["status"] = "failed";
+    echo json_encode($redirect);
+   }
    //CHECK IF USER NOT FOUND
-
+    else
+    {
    $person = new person();
    $person = $person->GetById($user->personId);
 
@@ -79,6 +86,7 @@ function login()
    $redirect["status"] = "success";
    $redirect["url"] = $page->physicalAddress;
    echo json_encode($redirect);
+    }
 }
 
 function addEmployeeDone()
