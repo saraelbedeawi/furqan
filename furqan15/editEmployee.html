@@ -1,0 +1,265 @@
+
+<script>
+     function showFields(id)
+{
+    jQuery.ajax(
+        {
+          url: "UserController.php",
+          data: 'method=getEmployeeDetails&id='+id,
+          type: "GET",
+          success:function(data2)
+          {
+            var employee = JSON.parse(data2);
+            $("#viewUpdate #name").val(employee.name);
+            $("#viewUpdate #SSN").val(employee.SSN);
+            $("#viewUpdate #DOB").val(employee.DOB);
+            $("#viewUpdate #editbutton").val(id);
+            $('#viewUpdate').show();
+            $("#viewemployee").hide();
+          }
+                  
+        });
+}   
+ function UsershowFields(id)
+{
+    jQuery.ajax(
+        {
+          url: "UserController.php",
+          data: 'method=getUserDetails&id='+id,
+          type: "GET",
+          success:function(data2)
+          {
+            var employee = JSON.parse(data2);
+            $("#credentials #username").val(employee.username);
+            $("#credentials #Usereditbutton").val(id);
+            $('#credentials').show();
+           $("#viewemployee").hide();
+          }
+                  
+        });
+}
+
+
+
+function deleteEmployee(id)
+ {
+     
+    var data = new FormData();
+    data.append('method', 'deleteEmployee');
+            data.append('id',id);
+            jQuery.ajax ({
+        
+        url: "UserController.php",
+        data: data,
+        type: "POST",
+        cache: false,
+            processData: false, // Don't process the files
+            contentType: false,
+      success:function(data2)
+      {
+          alert("done");
+        //   location.reload();
+      }
+              
+    });	
+ }
+ function deleteUser(id)
+ {
+     
+    var data = new FormData();
+    data.append('method', 'deleteUser');
+            data.append('id',id);
+            jQuery.ajax ({
+        
+        url: "UserController.php",
+        data: data,
+        type: "POST",
+        cache: false,
+            processData: false, // Don't process the files
+            contentType: false,
+      success:function(data2)
+      {
+       
+          alert("done");
+        //    location.reload();
+      }
+              
+    });	
+ }
+$(function()
+	{
+		$("#update_employee_form").submit(function(e){
+			e.preventDefault();	
+			var data = new FormData();
+			data.append('name',$('#name').val());
+			data.append('SSN',$('#SSN').val());
+			data.append('DOB',$('#DOB').val());
+			data.append('method', 'UpdateEmployeeDone');
+            data.append('id',$('#editbutton').val());
+			data.append('gender',$('input[name=exampleRadios]:checked').val())
+			jQuery.ajax({
+				url: "UserController.php",
+				data: data,
+				type: "POST",
+				cache: false,
+				processData: false, // Don't process the files
+				contentType: false,
+				success: function(data2)
+				{
+					alert("Uploaded Successfully!");
+				},
+				error: function(jqXHR, textStatus, errorThrown)
+				{
+					alert("Upload Failed!");
+				}          
+			});	
+		})
+	});
+function updateUser()
+       {
+           var data = new FormData();
+            data.append('username', $('#username').val());
+			data.append('pass', $('#pass').val());
+            data.append('id',$("#credentials #Usereditbutton").val());
+            data.append('method',"UpdateUser");
+            jQuery.ajax ({
+        
+            url: "UserController.php",
+            data: data,
+            type: "POST",
+            cache: false,
+				processData: false, // Don't process the files
+				contentType: false,
+          success:function(data2)
+          {
+              alert("done");
+          }
+                  
+        });
+}
+$(document).ready(function ()
+{
+            jQuery.ajax({
+				url: "UserController.php",
+				data: 'method=getEmployees',
+				type: "GET",
+				cache: false,
+				processData: false, // Don't process the files
+				contentType: false,
+				success: function(data2)
+				{
+                    
+                    var jsonn=JSON.parse(data2);
+                    console.log(jsonn);
+                    var tr;
+                    for (var i = 0; i < jsonn.length; i++) {
+                    tr = $('<tr/>');
+                    // tr.append("<td>" + jsonn[i].id+ "</td>");
+                    tr.append("<td>" + jsonn[i].name + "</td>"); 
+                     tr.append("<td>" + jsonn[i].nationalId + "</td>");
+                   if(jsonn[i].gender==1)
+                    {
+                        var gender ="انثي";
+                    }
+                    else
+                    {
+                        var gender="ذكر";
+                    }
+                    tr.append("<td>" + gender + "</td>"); 
+                
+                  
+                    
+                    tr.append("<td> <button class='btn' onclick='showFields("+jsonn[i].id+")'><i class='fa fa-edit'>تعديل</button>" + "</td>");
+                    tr.append("<td><button class='btn'onclick='deleteEmployee("+jsonn[i].id+")'><i class='fa fa-trash'></i>مسح</button>" + "</td>");
+                    if(jsonn[i].parentId==1)
+                    {
+                        tr.append("<td><button class='btn'onclick='UsershowFields("+jsonn[i].id+")'><i class=]fa fa-trash'></i>تعديل حساب</button>"+"</td>");
+                    }
+                    $('.listTable').append(tr);
+                   
+
+                     }
+				},
+				error: function(jqXHR, textStatus, errorThrown)
+				{
+					alert("Upload Failed!");
+				}          
+			});	
+});
+    </script>
+
+<div class="restOfForm container-fluid">
+
+    <div class="row">
+       <div style="width:100%; margin-left: auto;margin-right: auto; text-align:center; padding-top:20px;padding-bottom:20px;"> 
+        <h1> تفاصيل الموظفون</h1></div>
+            <table id='viewemployee' class='listTable' style='margin-left: auto;margin-right: auto;'>
+                         <tr>
+                          <th>الاسم</th>
+                          <th>الرقم القومي</th>
+                          <th>الجنس</th>
+                          <th>تعديل البينات</th>
+                          <th>مسح</th>
+                          <th>تعديل حساب</th>
+                        </tr>
+                    </table>
+    </div>
+        <div id="viewUpdate" style="display:none;">
+        <form class="col-md-6 offset-md-3" id="update_employee_form">
+			<div class="row">
+					<div class="col-md-6">
+						<label for="nameInput">الاسم</label>
+						<input type="text" id="name" class="form-control" placeholder="الاسم"><br>
+					</div>
+					<div class="col-md-6">
+						<label>الرقم القومي</label>
+						<input id="SSN" type="text" class="form-control">
+					</div>
+					<div class="col-md-6">
+						<label for="nameInput">تاريخ الميلاد</label>
+						<input type="date" id="DOB" class="form-control"><br>
+					</div>
+				
+					<div class="col-md-6 row">
+						<div class="col-md-12">
+							<label for="exampleRadios">النوع </label>
+						</div>
+						<div class="col-md-6">
+							<div class="form-check">
+								<input value="0" class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+								<label class="form-check-label" for="exampleRadios1">
+									ذكر
+								</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-check">
+								<input value="1"class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios" value="option1" checked>
+								<label  class="form-check-label" for="exampleRadios1">
+									انثي
+								</label>
+							</div>
+						</div>
+                    </div>
+                    <div class="col-md-4 offset-md-5">
+		<button id="editbutton"style="margin-top:20px;color: orange;"class="btn btn-light">تسجيل دخول</button>
+	</div>
+            </form>
+            
+				</div>	
+		<!-- ////////////////////////////////////////////// -->
+		
+				
+                </div>	
+                <div id="credentials"style="display:none; class=" credentials row">
+					<div class="col-md-6">
+						<label for="nameInput">اسم المستخدم</label>
+						<input type="text" id="username" class="form-control" placeholder="اسم المستخدم"><br>
+					</div>
+					<div class="col-md-6">
+						<label for="nameInput">  كلمة السر الجديدة</label>
+						<input type="password" id="pass" class="form-control"placeholder="كلمة السر"><br>
+                    </div>
+                    <div class="col-md-4 offset-md-5">
+		<button id="Usereditbutton" onclick="updateUser()" value="" style="margin-top:20px;color: orange;"class="btn btn-light">تسجيل دخول</button>
+	</div>		
